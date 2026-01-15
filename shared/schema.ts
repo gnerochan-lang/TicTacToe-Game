@@ -1,18 +1,21 @@
-import { sql } from "drizzle-orm";
-import { pgTable, text, varchar } from "drizzle-orm/pg-core";
+import { pgTable, text, serial, timestamp } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 
-export const users = pgTable("users", {
-  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
-  username: text("username").notNull().unique(),
-  password: text("password").notNull(),
+// === TABLE DEFINITIONS ===
+export const games = pgTable("games", {
+  id: serial("id").primaryKey(),
+  winner: text("winner"), // 'X', 'O', or 'draw'
+  createdAt: timestamp("created_at").defaultNow(),
 });
 
-export const insertUserSchema = createInsertSchema(users).pick({
-  username: true,
-  password: true,
-});
+// === BASE SCHEMAS ===
+export const insertGameSchema = createInsertSchema(games).omit({ id: true, createdAt: true });
 
-export type InsertUser = z.infer<typeof insertUserSchema>;
-export type User = typeof users.$inferSelect;
+// === EXPLICIT API CONTRACT TYPES ===
+export type Game = typeof games.$inferSelect;
+export type InsertGame = z.infer<typeof insertGameSchema>;
+
+export type CreateGameRequest = InsertGame;
+export type GameResponse = Game;
+export type GamesListResponse = Game[];

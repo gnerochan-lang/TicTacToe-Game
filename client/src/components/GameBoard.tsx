@@ -152,11 +152,11 @@ export function GameBoard({ onGameEnd }: GameBoardProps) {
                     <div className="flex justify-center mb-3">
                       <Trophy className={cn(
                         "w-12 h-12",
-                        !isXNext ? "text-accent fill-accent/20" : "text-secondary fill-secondary/20" 
+                        isXNext ? "text-secondary fill-secondary/20" : "text-accent fill-accent/20"
                       )} />
                     </div>
                     <h3 className="text-2xl font-black font-display text-foreground">
-                      {!isXNext ? t("playerX") : t("playerO")} {t("wins")}
+                      {isXNext ? t("playerO") : t("playerX")} {t("wins")}
                     </h3>
                   </>
                 ) : (

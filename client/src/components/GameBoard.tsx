@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
 import confetti from "canvas-confetti";
 import { X, Circle, RefreshCw, Trophy } from "lucide-react";
+import { useLanguage } from "@/lib/i18n";
 
 export type Player = "X" | "O" | null;
 export type GameStatus = "playing" | "won" | "draw";
@@ -12,13 +13,14 @@ interface GameBoardProps {
 }
 
 export function GameBoard({ onGameEnd }: GameBoardProps) {
+  const { t } = useLanguage();
   const [board, setBoard] = useState<Player[]>(Array(9).fill(null));
   const [isXNext, setIsXNext] = useState(true);
   const [status, setStatus] = useState<GameStatus>("playing");
   const [winningLine, setWinningLine] = useState<number[] | null>(null);
 
   const currentPlayer = isXNext ? "X" : "O";
-
+// ... (calculateWinner, handleClick, resetGame, triggerConfetti remains the same)
   const calculateWinner = (squares: Player[]) => {
     const lines = [
       [0, 1, 2], [3, 4, 5], [6, 7, 8], // Rows
@@ -101,11 +103,11 @@ export function GameBoard({ onGameEnd }: GameBoardProps) {
           status === 'playing' && isXNext ? "bg-accent/10 ring-2 ring-accent/20" : "opacity-50 grayscale"
         )}>
           <X className="w-5 h-5 text-accent" strokeWidth={3} />
-          <span className="font-bold text-accent font-display">Player X</span>
+          <span className="font-bold text-accent font-display">{t("playerX")}</span>
         </div>
 
         <div className="flex flex-col items-center">
-          <span className="text-xs uppercase tracking-wider font-bold text-muted-foreground/60">VS</span>
+          <span className="text-xs uppercase tracking-wider font-bold text-muted-foreground/60">{t("vs")}</span>
         </div>
 
         <div className={cn(
@@ -113,7 +115,7 @@ export function GameBoard({ onGameEnd }: GameBoardProps) {
           status === 'playing' && !isXNext ? "bg-secondary/10 ring-2 ring-secondary/20" : "opacity-50 grayscale"
         )}>
           <Circle className="w-5 h-5 text-secondary" strokeWidth={3} />
-          <span className="font-bold text-secondary font-display">Player O</span>
+          <span className="font-bold text-secondary font-display">{t("playerO")}</span>
         </div>
       </div>
 
@@ -156,7 +158,7 @@ export function GameBoard({ onGameEnd }: GameBoardProps) {
                       )} />
                     </div>
                     <h3 className="text-2xl font-black font-display text-foreground">
-                      {!isXNext ? "Player X" : "Player O"} Wins!
+                      {!isXNext ? t("playerX") : t("playerO")} {t("wins")}
                     </h3>
                   </>
                 ) : (
@@ -167,7 +169,7 @@ export function GameBoard({ onGameEnd }: GameBoardProps) {
                         <Circle className="w-10 h-10 opacity-50" />
                       </div>
                     </div>
-                    <h3 className="text-2xl font-black font-display text-muted-foreground">It's a Draw!</h3>
+                    <h3 className="text-2xl font-black font-display text-muted-foreground">{t("draw")}</h3>
                   </>
                 )}
                 
@@ -176,7 +178,7 @@ export function GameBoard({ onGameEnd }: GameBoardProps) {
                   className="mt-6 w-full flex items-center justify-center gap-2 px-6 py-3 rounded-xl font-bold bg-primary text-primary-foreground hover:bg-primary/90 active:scale-95 transition-all shadow-lg shadow-primary/25"
                 >
                   <RefreshCw className="w-4 h-4" />
-                  Play Again
+                  {t("playAgain")}
                 </button>
               </motion.div>
             </motion.div>
@@ -191,7 +193,7 @@ export function GameBoard({ onGameEnd }: GameBoardProps) {
           className="text-sm font-semibold text-muted-foreground hover:text-foreground transition-colors flex items-center gap-2 px-4 py-2 hover:bg-black/5 rounded-lg"
         >
           <RefreshCw className="w-4 h-4" />
-          Restart Game
+          {t("restart")}
         </button>
       )}
     </div>

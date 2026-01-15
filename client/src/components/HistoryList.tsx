@@ -2,9 +2,11 @@ import { useGames } from "@/hooks/use-games";
 import { formatDistanceToNow } from "date-fns";
 import { History, Trophy, Minus } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useLanguage } from "@/lib/i18n";
 
 export function HistoryList() {
   const { data: games, isLoading } = useGames();
+  const { t } = useLanguage();
 
   if (isLoading) {
     return (
@@ -24,14 +26,14 @@ export function HistoryList() {
         <div className="p-2 bg-primary/10 rounded-lg">
           <History className="w-5 h-5 text-primary" />
         </div>
-        <h3 className="font-bold text-lg font-display text-foreground">Match History</h3>
+        <h3 className="font-bold text-lg font-display text-foreground">{t("matchHistory")}</h3>
       </div>
       
       <div className="overflow-y-auto p-2 space-y-2 flex-1 custom-scrollbar">
         {recentGames.length === 0 ? (
           <div className="flex flex-col items-center justify-center h-40 text-muted-foreground gap-2">
             <Minus className="w-8 h-8 opacity-20" />
-            <p className="text-sm">No matches played yet.</p>
+            <p className="text-sm">{t("noMatches")}</p>
           </div>
         ) : (
           recentGames.map((game) => (
@@ -50,7 +52,7 @@ export function HistoryList() {
                 </div>
                 <div>
                   <p className="font-bold text-sm text-foreground">
-                    {game.winner === 'draw' ? "Draw" : `${game.winner} Won`}
+                    {game.winner === 'draw' ? t("drawHistory") : `${game.winner} ${t("won")}`}
                   </p>
                   <p className="text-xs text-muted-foreground font-medium">
                     {game.createdAt ? formatDistanceToNow(new Date(game.createdAt), { addSuffix: true }) : 'Just now'}

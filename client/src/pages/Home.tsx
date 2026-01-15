@@ -1,11 +1,14 @@
 import { GameBoard } from "@/components/GameBoard";
 import { HistoryList } from "@/components/HistoryList";
 import { useCreateGame } from "@/hooks/use-games";
+import { useLanguage } from "@/lib/i18n";
 import { motion } from "framer-motion";
-import { Gamepad2 } from "lucide-react";
+import { Gamepad2, Languages } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 export default function Home() {
   const { mutate: saveGame } = useCreateGame();
+  const { t, language, setLanguage } = useLanguage();
 
   const handleGameEnd = (winner: "X" | "O" | "draw") => {
     saveGame({ winner });
@@ -21,6 +24,18 @@ export default function Home() {
       </div>
 
       <div className="relative z-10 container mx-auto px-4 py-8 lg:py-12 max-w-6xl">
+        <div className="absolute top-4 right-4 flex gap-2">
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => setLanguage(language === "en" ? "zh" : "en")}
+            className="flex items-center gap-2"
+          >
+            <Languages className="w-4 h-4" />
+            {language === "en" ? "中文" : "English"}
+          </Button>
+        </div>
+
         <header className="mb-12 text-center">
           <motion.div
             initial={{ y: -20, opacity: 0 }}
@@ -30,15 +45,19 @@ export default function Home() {
             <div className="inline-flex items-center justify-center p-3 bg-white rounded-2xl shadow-sm mb-4 border border-border">
               <Gamepad2 className="w-8 h-8 text-primary mr-3" />
               <h1 className="text-4xl md:text-5xl font-black tracking-tight text-foreground font-display">
-                <span className="text-accent">Tic</span>
-                <span className="text-muted-foreground mx-1">-</span>
-                <span className="text-primary">Tac</span>
-                <span className="text-muted-foreground mx-1">-</span>
-                <span className="text-secondary">Toe</span>
+                {language === "zh" ? t("title") : (
+                  <>
+                    <span className="text-accent">Tic</span>
+                    <span className="text-muted-foreground mx-1">-</span>
+                    <span className="text-primary">Tac</span>
+                    <span className="text-muted-foreground mx-1">-</span>
+                    <span className="text-secondary">Toe</span>
+                  </>
+                )}
               </h1>
             </div>
             <p className="text-muted-foreground font-medium text-lg max-w-md mx-auto">
-              A classic game for two players. Get three in a row to win!
+              {t("subtitle")}
             </p>
           </motion.div>
         </header>
@@ -69,7 +88,7 @@ export default function Home() {
         </main>
         
         <footer className="mt-16 text-center text-sm text-muted-foreground/60 font-medium">
-          <p>© 2024 Arcade Classics. Built with React & Tailwind.</p>
+          <p>{t("footer")}</p>
         </footer>
       </div>
     </div>

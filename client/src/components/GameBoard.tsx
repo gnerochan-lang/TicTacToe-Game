@@ -18,10 +18,12 @@ export function GameBoard({ onGameEnd }: GameBoardProps) {
   const [isXNext, setIsXNext] = useState(true);
   const [status, setStatus] = useState<GameStatus>("playing");
   const [winningLine, setWinningLine] = useState<number[] | null>(null);
+  const [winner, setWinner] = useState<Player>(null);
 
   const currentPlayer = isXNext ? "X" : "O";
-// ... (calculateWinner, handleClick, resetGame, triggerConfetti remains the same)
+
   const calculateWinner = (squares: Player[]) => {
+// ... (calculateWinner remains the same)
     const lines = [
       [0, 1, 2], [3, 4, 5], [6, 7, 8], // Rows
       [0, 3, 6], [1, 4, 7], [2, 5, 8], // Columns
@@ -43,7 +45,6 @@ export function GameBoard({ onGameEnd }: GameBoardProps) {
     const newBoard = [...board];
     newBoard[index] = currentPlayer;
     
-    // We update state first
     setBoard(newBoard);
 
     const result = calculateWinner(newBoard);
@@ -52,10 +53,11 @@ export function GameBoard({ onGameEnd }: GameBoardProps) {
       // WIN CONDITION
       setStatus("won");
       setWinningLine(result.line);
+      setWinner(result.winner);
       onGameEnd(result.winner as "X" | "O");
       triggerConfetti(result.winner === "X");
     } else if (!newBoard.includes(null)) {
-      // DRAW CONDITION: Only if no winner AND no empty cells
+      // DRAW CONDITION
       setStatus("draw");
       onGameEnd("draw");
     } else {
@@ -69,8 +71,9 @@ export function GameBoard({ onGameEnd }: GameBoardProps) {
     setIsXNext(true);
     setStatus("playing");
     setWinningLine(null);
+    setWinner(null);
   };
-
+// ... (triggerConfetti remains the same)
   const triggerConfetti = (isXWinner: boolean) => {
     const end = Date.now() + 1000;
     const colors = isXWinner ? ['#ec4899', '#db2777'] : ['#06b6d4', '#0891b2'];
@@ -99,6 +102,7 @@ export function GameBoard({ onGameEnd }: GameBoardProps) {
 
   return (
     <div className="flex flex-col items-center gap-8 w-full max-w-md mx-auto">
+// ... (Status Header remains the same)
       {/* Status Header */}
       <div className="flex items-center justify-between w-full px-4 py-3 bg-white rounded-2xl shadow-sm border border-border/50">
         <div className={cn(
@@ -124,6 +128,7 @@ export function GameBoard({ onGameEnd }: GameBoardProps) {
 
       {/* Game Grid */}
       <div className="relative p-4 bg-white rounded-[2rem] shadow-xl shadow-primary/5 border border-border/60">
+// ... (Square mapping remains the same)
         <div className="grid grid-cols-3 gap-3 sm:gap-4">
           {board.map((cell, index) => (
             <Square 
@@ -156,14 +161,15 @@ export function GameBoard({ onGameEnd }: GameBoardProps) {
                     <div className="flex justify-center mb-3">
                       <Trophy className={cn(
                         "w-12 h-12",
-                        isXNext ? "text-secondary fill-secondary/20" : "text-accent fill-accent/20"
+                        winner === "X" ? "text-accent fill-accent/20" : "text-secondary fill-secondary/20"
                       )} />
                     </div>
                     <h3 className="text-2xl font-black font-display text-foreground">
-                      {isXNext ? t("playerO") : t("playerX")} {t("wins")}
+                      {winner === "X" ? t("playerX") : t("playerO")} {t("wins")}
                     </h3>
                   </>
                 ) : (
+// ... (Draw case remains the same)
                   <>
                      <div className="flex justify-center mb-3 text-muted-foreground">
                       <div className="flex -space-x-2">

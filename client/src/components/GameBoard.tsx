@@ -42,20 +42,24 @@ export function GameBoard({ onGameEnd }: GameBoardProps) {
 
     const newBoard = [...board];
     newBoard[index] = currentPlayer;
+    
+    // We update state first
     setBoard(newBoard);
 
     const result = calculateWinner(newBoard);
     
     if (result) {
+      // WIN CONDITION
       setStatus("won");
       setWinningLine(result.line);
-      // winner should be based on result.winner, which is the player who just moved
       onGameEnd(result.winner as "X" | "O");
       triggerConfetti(result.winner === "X");
     } else if (!newBoard.includes(null)) {
+      // DRAW CONDITION: Only if no winner AND no empty cells
       setStatus("draw");
       onGameEnd("draw");
     } else {
+      // CONTINUE PLAYING
       setIsXNext(!isXNext);
     }
   };

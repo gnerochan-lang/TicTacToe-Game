@@ -49,10 +49,9 @@ export function GameBoard({ onGameEnd }: GameBoardProps) {
     if (result) {
       setStatus("won");
       setWinningLine(result.line);
-      if (result.winner) {
-        onGameEnd(result.winner as "X" | "O");
-        triggerConfetti();
-      }
+      // winner should be based on result.winner, which is the player who just moved
+      onGameEnd(result.winner as "X" | "O");
+      triggerConfetti(result.winner === "X");
     } else if (!newBoard.includes(null)) {
       setStatus("draw");
       onGameEnd("draw");
@@ -68,9 +67,9 @@ export function GameBoard({ onGameEnd }: GameBoardProps) {
     setWinningLine(null);
   };
 
-  const triggerConfetti = () => {
+  const triggerConfetti = (isXWinner: boolean) => {
     const end = Date.now() + 1000;
-    const colors = isXNext ? ['#ec4899', '#db2777'] : ['#06b6d4', '#0891b2'];
+    const colors = isXWinner ? ['#ec4899', '#db2777'] : ['#06b6d4', '#0891b2'];
 
     (function frame() {
       confetti({
@@ -154,7 +153,6 @@ export function GameBoard({ onGameEnd }: GameBoardProps) {
                       <Trophy className={cn(
                         "w-12 h-12",
                         !isXNext ? "text-accent fill-accent/20" : "text-secondary fill-secondary/20" 
-                        // Note: Logic flipped because turn switches after move, but winner is previous turn
                       )} />
                     </div>
                     <h3 className="text-2xl font-black font-display text-foreground">

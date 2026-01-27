@@ -39,6 +39,15 @@ export async function registerRoutes(
     res.sendStatus(204);
   });
 
+  app.post("/api/games/batch-delete", async (req, res) => {
+    const { ids } = req.body;
+    if (!Array.isArray(ids)) {
+      return res.status(400).json({ message: "Invalid IDs" });
+    }
+    await storage.deleteGames(ids);
+    res.sendStatus(204);
+  });
+
   return httpServer;
 }
 

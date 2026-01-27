@@ -1,15 +1,18 @@
 import { useGames } from "@/hooks/use-games";
 import { formatDistanceToNow } from "date-fns";
-import { History, Trophy, Minus, Trash2 } from "lucide-react";
+import { History, Trophy, Minus, Trash2, CheckSquare, Square as SquareIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useLanguage } from "@/lib/i18n";
 import { useMutation } from "@tanstack/react-query";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import { Button } from "@/components/ui/button";
+import { useState } from "react";
+import { Checkbox } from "@/components/ui/checkbox";
 
 export function HistoryList() {
   const { data: games, isLoading } = useGames();
   const { t } = useLanguage();
+  const [selectedIds, setSelectedIds] = useState<number[]>([]);
 
   const deleteMutation = useMutation({
     mutationFn: async (id: number) => {
@@ -17,6 +20,17 @@ export function HistoryList() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/games"] });
+      setSelectedIds(prev => prev.filter(id => id !== id));
+    },
+  });
+
+  const batchDeleteMutation = useMutation({
+    mutationFn: async (ids: number[]) => {
+      await apiRequest("POST", "/api/games/batch-delete", { ids });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/games"] });
+      setSelectedIds([]);
     },
   });
 
@@ -32,13 +46,55 @@ export function HistoryList() {
     new Date(b.createdAt || 0).getTime() - new Date(a.createdAt || 0).getTime()
   ).slice(0, 10) : [];
 
+  const toggleSelect = (id: number) => {
+    setSelectedIds(prev => 
+      prev.includes(id) ? prev.filter(i => i !== id) : [...prev, id]
+    );
+  };
+
+  const toggleSelectAll = () => {
+    if (selectedIds.length === recentGames.length) {
+      setSelectedIds([]);
+    } else {
+      setSelectedIds(recentGames.map(g => g.id));
+    }
+  };
+
   return (
     <div className="bg-white rounded-2xl shadow-lg shadow-black/5 border border-border/50 overflow-hidden flex flex-col h-full max-h-[500px]">
-      <div className="p-4 border-b border-border/50 bg-muted/30 flex items-center gap-2">
-        <div className="p-2 bg-primary/10 rounded-lg">
-          <History className="w-5 h-5 text-primary" />
+      <div className="p-4 border-b border-border/50 bg-muted/30 flex items-center justify-between gap-2">
+        <div className="flex items-center gap-2">
+          <div className="p-2 bg-primary/10 rounded-lg">
+            <History className="w-5 h-5 text-primary" />
+          </div>
+          <h3 className="font-bold text-lg font-display text-foreground">{t("matchHistory")}</h3>
         </div>
-        <h3 className="font-bold text-lg font-display text-foreground">{t("matchHistory")}</h3>
+        
+        {recentGames.length > 0 && (
+          <div className="flex items-center gap-2">
+            {selectedIds.length > 0 && (
+              <Button
+                variant="destructive"
+                size="sm"
+                className="h-8 px-3 gap-2"
+                onClick={() => batchDeleteMutation.mutate(selectedIds)}
+                disabled={batchDeleteMutation.isPending}
+              >
+                <Trash2 className="w-4 h-4" />
+                <span className="text-xs">{t("deleteSelected")} ({selectedIds.length})</span>
+              </Button>
+            )}
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-8 w-8"
+              onClick={toggleSelectAll}
+              title={selectedIds.length === recentGames.length ? "Deselect All" : "Select All"}
+            >
+              {selectedIds.length === recentGames.length ? <CheckSquare className="w-4 h-4" /> : <SquareIcon className="w-4 h-4" />}
+            </Button>
+          </div>
+        )}
       </div>
       
       <div className="overflow-y-auto p-2 space-y-2 flex-1 custom-scrollbar">
@@ -51,9 +107,17 @@ export function HistoryList() {
           recentGames.map((game) => (
             <div 
               key={game.id} 
-              className="group flex items-center justify-between p-3 rounded-xl hover:bg-muted/50 transition-colors border border-transparent hover:border-border/50"
+              className={cn(
+                "group flex items-center justify-between p-3 rounded-xl transition-colors border",
+                selectedIds.includes(game.id) ? "bg-primary/5 border-primary/20" : "hover:bg-muted/50 border-transparent hover:border-border/50"
+              )}
             >
               <div className="flex items-center gap-3">
+                <Checkbox 
+                  checked={selectedIds.includes(game.id)}
+                  onCheckedChange={() => toggleSelect(game.id)}
+                  className="w-4 h-4"
+                />
                 <div className={cn(
                   "w-10 h-10 rounded-full flex items-center justify-center font-black font-display text-lg shadow-sm border",
                   game.winner === 'X' ? "bg-accent/10 text-accent border-accent/20" : 

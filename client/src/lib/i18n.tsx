@@ -61,6 +61,10 @@ const translations: Translations = {
     en: "Draw",
     zh: "平手",
   },
+  deleteSelected: {
+    en: "Delete Selected",
+    zh: "刪除所選",
+  },
   footer: {
     en: "© 2024 Arcade Classics. Built with React & Tailwind.",
     zh: "© 2024 街機經典。使用 React & Tailwind 構建。",

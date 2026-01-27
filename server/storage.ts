@@ -1,10 +1,11 @@
 import { db } from "./db";
 import { games, type InsertGame, type Game } from "@shared/schema";
-import { desc } from "drizzle-orm";
+import { desc, eq } from "drizzle-orm";
 
 export interface IStorage {
   getGames(): Promise<Game[]>;
   createGame(game: InsertGame): Promise<Game>;
+  deleteGame(id: number): Promise<void>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -15,6 +16,10 @@ export class DatabaseStorage implements IStorage {
   async createGame(insertGame: InsertGame): Promise<Game> {
     const [game] = await db.insert(games).values(insertGame).returning();
     return game;
+  }
+
+  async deleteGame(id: number): Promise<void> {
+    await db.delete(games).where(eq(games.id, id));
   }
 }
 

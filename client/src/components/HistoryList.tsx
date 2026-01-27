@@ -1,12 +1,24 @@
 import { useGames } from "@/hooks/use-games";
 import { formatDistanceToNow } from "date-fns";
-import { History, Trophy, Minus } from "lucide-react";
+import { History, Trophy, Minus, Trash2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useLanguage } from "@/lib/i18n";
+import { useMutation } from "@tanstack/react-query";
+import { apiRequest, queryClient } from "@/lib/queryClient";
+import { Button } from "@/components/ui/button";
 
 export function HistoryList() {
   const { data: games, isLoading } = useGames();
   const { t } = useLanguage();
+
+  const deleteMutation = useMutation({
+    mutationFn: async (id: number) => {
+      await apiRequest("DELETE", `/api/games/${id}`);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/games"] });
+    },
+  });
 
   if (isLoading) {
     return (
@@ -60,12 +72,23 @@ export function HistoryList() {
                 </div>
               </div>
               
-              {game.winner !== 'draw' && (
-                <Trophy className={cn(
-                  "w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity",
-                  game.winner === 'X' ? "text-accent" : "text-secondary"
-                )} />
-              )}
+              <div className="flex items-center gap-2">
+                {game.winner !== 'draw' && (
+                  <Trophy className={cn(
+                    "w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity",
+                    game.winner === 'X' ? "text-accent" : "text-secondary"
+                  )} />
+                )}
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="h-8 w-8 text-muted-foreground hover:text-destructive opacity-0 group-hover:opacity-100 transition-opacity"
+                  onClick={() => deleteMutation.mutate(game.id)}
+                  disabled={deleteMutation.isPending}
+                >
+                  <Trash2 className="h-4 w-4" />
+                </Button>
+              </div>
             </div>
           ))
         )}

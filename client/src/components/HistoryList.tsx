@@ -124,28 +124,28 @@ export function HistoryList() {
                 key={game.id} 
                 className={cn(
                   "group flex items-center justify-between p-3 rounded-xl transition-colors border",
-                  selectedIds.includes(game.id) ? "bg-primary/5 border-primary/20" : "hover:bg-muted/50 border-transparent hover:border-border/50"
+                  selectedIds.includes(game.id) ? "bg-primary/10 border-primary/40" : "hover:bg-white/5 border-transparent hover:border-white/10"
                 )}
               >
                 <div className="flex items-center gap-3">
                   <Checkbox 
                     checked={selectedIds.includes(game.id)}
                     onCheckedChange={() => toggleSelect(game.id)}
-                    className="w-4 h-4"
+                    className="w-4 h-4 border-white/20 data-[state=checked]:bg-primary data-[state=checked]:border-primary"
                   />
                   <div className={cn(
                     "w-10 h-10 rounded-full flex items-center justify-center font-black font-display text-lg shadow-sm border",
-                    game.winner === 'X' ? "bg-accent/10 text-accent border-accent/20" : 
-                    game.winner === 'O' ? "bg-secondary/10 text-secondary border-secondary/20" :
-                    "bg-muted text-muted-foreground border-border"
+                    game.winner === 'X' ? "bg-accent/20 text-accent border-accent/40 shadow-[0_0_10px_rgba(236,72,153,0.3)]" : 
+                    game.winner === 'O' ? "bg-secondary/20 text-secondary border-secondary/40 shadow-[0_0_10px_rgba(6,182,212,0.3)]" :
+                    "bg-white/5 text-white/40 border-white/10"
                   )}>
                     {game.winner === 'draw' ? '=' : game.winner}
                   </div>
                   <div>
-                    <p className="font-bold text-sm text-foreground">
+                    <p className="font-bold text-sm text-white/90">
                       {game.winner === 'draw' ? t("drawHistory") : `${game.winner} ${t("won")}`}
                     </p>
-                    <p className="text-xs text-muted-foreground font-medium">
+                    <p className="text-xs text-white/40 font-medium">
                       {game.createdAt ? formatDistanceToNow(new Date(game.createdAt), { addSuffix: true }) : 'Just now'}
                     </p>
                   </div>
@@ -155,13 +155,13 @@ export function HistoryList() {
                   {game.winner !== 'draw' && (
                     <Trophy className={cn(
                       "w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity",
-                      game.winner === 'X' ? "text-accent" : "text-secondary"
+                      game.winner === 'X' ? "text-accent drop-shadow-[0_0_5px_rgba(236,72,153,0.5)]" : "text-secondary drop-shadow-[0_0_5px_rgba(6,182,212,0.5)]"
                     )} />
                   )}
                   <Button
                     variant="ghost"
                     size="icon"
-                    className="h-8 w-8 text-muted-foreground hover:text-destructive opacity-0 group-hover:opacity-100 transition-opacity"
+                    className="h-8 w-8 text-white/40 hover:text-destructive opacity-0 group-hover:opacity-100 transition-opacity"
                     onClick={() => setDeleteId(game.id)}
                     disabled={deleteMutation.isPending}
                   >

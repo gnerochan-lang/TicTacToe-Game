@@ -65,6 +65,26 @@ const translations: Translations = {
     en: "Delete Selected",
     zh: "刪除所選",
   },
+  deleteConfirmTitle: {
+    en: "Are you absolutely sure?",
+    zh: "您確定要刪除嗎？",
+  },
+  deleteConfirmDesc: {
+    en: "This action cannot be undone. This will permanently delete the selected game records.",
+    zh: "此操作無法撤銷。這將永久刪除所選的對戰紀錄。",
+  },
+  cancel: {
+    en: "Cancel",
+    zh: "取消",
+  },
+  confirm: {
+    en: "Delete",
+    zh: "刪除",
+  },
+  confirming: {
+    en: "Deleting...",
+    zh: "刪除中...",
+  },
   footer: {
     en: "© 2024 Arcade Classics. Built with React & Tailwind.",
     zh: "© 2024 街機經典。使用 React & Tailwind 構建。",

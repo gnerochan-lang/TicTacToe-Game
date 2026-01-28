@@ -101,31 +101,32 @@ export function GameBoard({ onGameEnd }: GameBoardProps) {
   return (
     <div className="flex flex-col items-center gap-8 w-full max-w-md mx-auto">
       {/* Status Header */}
-      <div className="flex items-center justify-between w-full px-4 py-3 bg-white rounded-2xl shadow-sm border border-border/50">
+      <div className="flex items-center justify-between w-full px-4 py-3 bg-muted/50 backdrop-blur-sm rounded-2xl shadow-[0_0_20px_rgba(0,0,0,0.3)] border border-white/5">
         <div className={cn(
           "flex items-center gap-2 px-3 py-1.5 rounded-xl transition-all duration-300",
-          status === 'playing' && isXNext ? "bg-accent/10 ring-2 ring-accent/20" : "opacity-50 grayscale"
+          status === 'playing' && isXNext ? "bg-accent/20 ring-2 ring-accent shadow-[0_0_15px_rgba(236,72,153,0.4)]" : "opacity-30 grayscale"
         )}>
-          <X className="w-5 h-5 text-accent" strokeWidth={3} />
+          <X className="w-5 h-5 text-accent drop-shadow-[0_0_8px_rgba(236,72,153,0.8)]" strokeWidth={3} />
           <span className="font-bold text-accent font-display">{t("playerX")}</span>
         </div>
 
         <div className="flex flex-col items-center">
-          <span className="text-xs uppercase tracking-wider font-bold text-muted-foreground/60">{t("vs")}</span>
+          <span className="text-xs uppercase tracking-wider font-bold text-primary/60 drop-shadow-[0_0_5px_rgba(251,191,36,0.5)]">{t("vs")}</span>
         </div>
 
         <div className={cn(
           "flex items-center gap-2 px-3 py-1.5 rounded-xl transition-all duration-300",
-          status === 'playing' && !isXNext ? "bg-secondary/10 ring-2 ring-secondary/20" : "opacity-50 grayscale"
+          status === 'playing' && !isXNext ? "bg-secondary/20 ring-2 ring-secondary shadow-[0_0_15px_rgba(6,182,212,0.4)]" : "opacity-30 grayscale"
         )}>
-          <Circle className="w-5 h-5 text-secondary" strokeWidth={3} />
+          <Circle className="w-5 h-5 text-secondary drop-shadow-[0_0_8px_rgba(6,182,212,0.8)]" strokeWidth={3} />
           <span className="font-bold text-secondary font-display">{t("playerO")}</span>
         </div>
       </div>
 
       {/* Game Grid */}
-      <div className="relative p-4 bg-white rounded-[2rem] shadow-xl shadow-primary/5 border border-border/60">
-        <div className="grid grid-cols-3 gap-3 sm:gap-4">
+      <div className="relative p-6 bg-black/40 backdrop-blur-md rounded-[2.5rem] shadow-2xl border border-primary/20 shadow-primary/5">
+        <div className="grid grid-cols-3 gap-4 sm:gap-6 relative">
+          {/* Neon Grid Lines - Visual Overlay (Simplified as Grid Gaps) */}
           {board.map((cell, index) => (
             <Square 
               key={index}
@@ -219,15 +220,15 @@ function Square({ value, onClick, isWinning, disabled, turn }: SquareProps) {
       onClick={onClick}
       disabled={!!value || disabled}
       className={cn(
-        "relative w-20 h-20 sm:w-24 sm:h-24 rounded-xl flex items-center justify-center text-4xl sm:text-5xl outline-none transition-all duration-300",
+        "relative w-20 h-20 sm:w-24 sm:h-24 rounded-2xl flex items-center justify-center text-4xl sm:text-5xl outline-none transition-all duration-300",
         // Background styles
-        "bg-muted/30 hover:bg-muted/50 border-2 border-transparent",
+        "bg-white/5 hover:bg-white/10 border-2 border-primary/20",
         // Winning styles
-        isWinning && value === "X" && "bg-accent/10 border-accent shadow-[0_0_20px_rgba(236,72,153,0.3)]",
-        isWinning && value === "O" && "bg-secondary/10 border-secondary shadow-[0_0_20px_rgba(6,182,212,0.3)]",
+        isWinning && value === "X" && "bg-accent/20 border-accent shadow-[0_0_25px_rgba(236,72,153,0.5)] z-10 scale-105",
+        isWinning && value === "O" && "bg-secondary/20 border-secondary shadow-[0_0_25px_rgba(6,182,212,0.5)] z-10 scale-105",
         // Empty hover hint
-        !value && !disabled && turn === "X" && "hover:border-accent/20 hover:bg-accent/5",
-        !value && !disabled && turn === "O" && "hover:border-secondary/20 hover:bg-secondary/5",
+        !value && !disabled && turn === "X" && "hover:border-accent/40 hover:bg-accent/5",
+        !value && !disabled && turn === "O" && "hover:border-secondary/40 hover:bg-secondary/5",
       )}
     >
       <AnimatePresence>
@@ -235,7 +236,7 @@ function Square({ value, onClick, isWinning, disabled, turn }: SquareProps) {
           <motion.div
             initial={{ scale: 0.5, opacity: 0, rotate: -45 }}
             animate={{ scale: 1, opacity: 1, rotate: 0 }}
-            className="text-accent drop-shadow-sm"
+            className="text-accent drop-shadow-[0_0_10px_rgba(236,72,153,0.9)]"
           >
             <X size={48} strokeWidth={3.5} className="sm:w-16 sm:h-16 font-handwriting" />
           </motion.div>
@@ -244,7 +245,7 @@ function Square({ value, onClick, isWinning, disabled, turn }: SquareProps) {
           <motion.div
             initial={{ scale: 0.5, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
-            className="text-secondary drop-shadow-sm"
+            className="text-secondary drop-shadow-[0_0_10px_rgba(6,182,212,0.9)]"
           >
             <Circle size={44} strokeWidth={3.5} className="sm:w-14 sm:h-14 font-handwriting" />
           </motion.div>

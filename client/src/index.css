@@ -5,40 +5,46 @@
 @tailwind utilities;
 
 :root {
-  /* Colorful, playful palette for a game */
+  /* Neon Theme inspired by attached image */
   --font-display: 'Outfit', sans-serif;
   --font-body: 'DM Sans', sans-serif;
   --font-handwriting: 'Architects Daughter', cursive;
 
-  --background: 210 20% 98%;
-  --foreground: 222 47% 11%;
+  --background: 231 40% 6%; /* Deep dark blue */
+  --foreground: 210 40% 98%;
   
-  --primary: 250 100% 65%; /* Vibrant Purple */
-  --primary-foreground: 0 0% 100%;
+  --primary: 43 96% 58%; /* Golden Yellow for lines/grid */
+  --primary-foreground: 231 40% 6%;
   
-  --secondary: 180 100% 40%; /* Teal/Cyan for O */
-  --secondary-foreground: 0 0% 100%;
+  --secondary: 191 100% 50%; /* Cyan for O */
+  --secondary-foreground: 231 40% 6%;
   
-  --muted: 210 40% 96%;
-  --muted-foreground: 215 16% 47%;
+  --accent: 326 100% 60%; /* Hot Pink for X */
+  --accent-foreground: 210 40% 98%;
   
-  --accent: 330 100% 60%; /* Pink/Magenta for X */
-  --accent-foreground: 0 0% 100%;
+  --muted: 231 40% 12%;
+  --muted-foreground: 215 16% 70%;
   
   --destructive: 0 84% 60%;
-  --destructive-foreground: 0 0% 100%;
+  --destructive-foreground: 210 40% 98%;
   
-  --border: 214 32% 91%;
-  --input: 214 32% 91%;
-  --ring: 250 100% 65%;
+  --border: 231 40% 15%;
+  --input: 231 40% 15%;
+  --ring: 43 96% 58%;
   
   --radius: 1rem;
+
+  /* Neon Glows */
+  --glow-yellow: 0 0 15px hsl(43 96% 58% / 0.6);
+  --glow-cyan: 0 0 15px hsl(191 100% 50% / 0.6);
+  --glow-pink: 0 0 15px hsl(326 100% 60% / 0.6);
 }
 
 @layer base {
   body {
     @apply bg-background text-foreground antialiased selection:bg-primary/20;
     font-family: var(--font-body);
+    background-image: radial-gradient(circle at center, hsl(231 40% 10%) 0%, hsl(231 40% 6%) 100%);
   }
 
   h1, h2, h3, h4, h5, h6 {

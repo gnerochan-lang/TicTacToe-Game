@@ -76,13 +76,13 @@ export function HistoryList() {
 
   return (
     <>
-      <div className="bg-black/40 backdrop-blur-md rounded-2xl shadow-2xl border border-white/5 overflow-hidden flex flex-col h-full max-h-[500px]">
-        <div className="p-4 border-b border-white/5 bg-white/5 flex items-center justify-between gap-2">
+      <div className="bg-black/60 backdrop-blur-xl rounded-2xl shadow-2xl border border-white/10 overflow-hidden flex flex-col h-full max-h-[500px]">
+        <div className="p-4 border-b border-white/10 bg-white/5 flex items-center justify-between gap-2">
           <div className="flex items-center gap-2">
-            <div className="p-2 bg-primary/20 rounded-lg">
-              <History className="w-5 h-5 text-primary drop-shadow-[0_0_5px_rgba(251,191,36,0.5)]" />
+            <div className="p-2 bg-primary/20 rounded-lg shadow-[0_0_10px_rgba(251,191,36,0.2)]">
+              <History className="w-5 h-5 text-primary drop-shadow-[0_0_5px_rgba(251,191,36,0.6)]" />
             </div>
-            <h3 className="font-bold text-lg font-display text-white">{t("matchHistory")}</h3>
+            <h3 className="font-bold text-lg font-display text-white tracking-wide drop-shadow-md">{t("matchHistory")}</h3>
           </div>
           
           {recentGames.length > 0 && (
